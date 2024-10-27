@@ -10,12 +10,12 @@ const server = gateway({
     routes: [
         {
             prefix: '/usuarios',
-            target: 'http://localhost:8081/',
+            target: 'https://usuarios-service.onrender.com', // URL de Render para el servicio de usuarios
             hooks: {}
         },
         {
             prefix: '/productos',
-            target: 'http://localhost:8082/',
+            target: 'https://productos-service.onrender.com', // URL de Render para el servicio de productos
             hooks: {}
         }
     ]
