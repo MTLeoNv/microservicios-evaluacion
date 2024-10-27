@@ -1,10 +1,14 @@
 document.addEventListener('DOMContentLoaded', function() {
+    function mostrarError(mensaje) {
+        alert(mensaje);
+    }
+
     // Cargar usuarios
     document.getElementById('cargarUsuarios').addEventListener('click', function() {
         fetch('https://api-gateway-o5lb.onrender.com/usuarios/list.usuarios')
             .then(response => {
                 if (!response.ok) {
-                    throw new Error('Error en la respuesta del servidor');
+                    throw new Error('Error en el servidor de usuarios');
                 }
                 return response.json();
             })
@@ -25,6 +29,7 @@ document.addEventListener('DOMContentLoaded', function() {
             })
             .catch(error => {
                 console.error('Error al cargar usuarios:', error);
+                mostrarError('El servicio de usuarios no está disponible actualmente.');
             });
     });
 
@@ -33,11 +38,12 @@ document.addEventListener('DOMContentLoaded', function() {
         fetch('https://api-gateway-o5lb.onrender.com/productos/list.productos')
             .then(response => {
                 if (!response.ok) {
-                    throw new Error('Error en la respuesta del servidor');
+                    throw new Error('Error en el servidor de productos');
                 }
                 return response.json();
             })
             .then(data => {
+                console.log(data);
                 let productosList = document.getElementById('productosList');
                 productosList.innerHTML = '';
                 
@@ -52,7 +58,10 @@ document.addEventListener('DOMContentLoaded', function() {
                     productosList.appendChild(row);
                 });
             })
-            .catch(err => console.error('Error al cargar productos:', err));
+            .catch(err => {
+                console.error('Error al cargar productos:', err);
+                mostrarError('El servicio de productos no está disponible actualmente.');
+            });
     });
 
     // Manejo del formulario de añadir producto
@@ -70,7 +79,12 @@ document.addEventListener('DOMContentLoaded', function() {
             },
             body: JSON.stringify({ nombre, precio, stock })
         })
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Error en el servidor al añadir producto');
+            }
+            return response.json();
+        })
         .then(data => {
             console.log(data);
             alert(data.data.message);
@@ -81,7 +95,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
             document.getElementById('cargarProductos').click();
         })
-        .catch(err => console.error('Error al añadir producto:', err));
+        .catch(err => {
+            console.error('Error al añadir producto:', err);
+            mostrarError('El servicio de productos no está disponible actualmente.');
+        });
     });
 
     // Manejo del formulario de añadir usuario
@@ -98,7 +115,12 @@ document.addEventListener('DOMContentLoaded', function() {
             },
             body: JSON.stringify({ nombre, correo })
         })
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Error en el servidor al añadir usuario');
+            }
+            return response.json();
+        })
         .then(data => {
             console.log(data);
             alert(data.data.message);
@@ -108,6 +130,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
             document.getElementById('cargarUsuarios').click();
         })
-        .catch(err => console.error('Error al añadir usuario:', err));
+        .catch(err => {
+            console.error('Error al añadir usuario:', err);
+            mostrarError('El servicio de usuarios no está disponible actualmente.');
+        });
     });
 });
